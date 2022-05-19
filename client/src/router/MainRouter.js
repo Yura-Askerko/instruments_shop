@@ -4,18 +4,32 @@ import { Box } from "@mui/material";
 import SignInPage from "../pages/SignInPage";
 import AdminPage from "../pages/AdminPage";
 import AdminRoute from "../components/common/AdminRoute";
+import ProtectedRoute from "../components/common/ProtectedRoute";
 import TypePage from "../pages/TypePage";
 import CategoryPage from "../pages/CategoryPage";
 import ProductPage from "../pages/ProductPage";
 import OrderPage from "../pages/OrderPage";
 import UserPage from "../pages/UserPage";
 import ReportsPage from "../pages/ReportsPage";
+import CatalogPage from "../pages/CatalogPage";
+import NavBar from "../pages/NavBar";
+import BasketPage from "../pages/BasketPage";
 
 const MainRouter = () => (
   <Router>
+    <NavBar />
     <Box className="App">
       <Routes>
+        <Route path="/" exact element={<CatalogPage />} />
         <Route path="/signin" exact element={<SignInPage />} />
+        <Route
+          path="/basket"
+          element={
+            <ProtectedRoute>
+              <BasketPage />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/admin"
           element={

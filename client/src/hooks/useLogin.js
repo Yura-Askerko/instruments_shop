@@ -20,7 +20,12 @@ const useLogin = () => {
           roleId: data.roleId,
           isAdmin: data.isAdmin,
         });
-        navigate("/home");
+        if(data.isAdmin) {
+          navigate("/admin");
+        }
+        else {
+          navigate("/");
+        }
       } else {
         alert("Login failed");
         setIsAuthenticated(null);

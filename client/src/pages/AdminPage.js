@@ -6,9 +6,6 @@ import styled from "@emotion/styled/macro";
 const AdminPage = () => {
   return (
     <Page title="Админ панель">
-      <Typography variant="h5" sx={{ mt: 10 }}>
-        Админ панель
-      </Typography>
       <Box
         style={{
           marginTop: "120px",

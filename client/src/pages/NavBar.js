@@ -9,20 +9,24 @@ import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
 import { useRecoilValue } from "recoil";
-import { currentUserState } from "../atoms/auth";
+import { currentUserState, isAuthenticatedState } from "../atoms/auth";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import PersonIcon from "@mui/icons-material/Person";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import LoginIcon from "@mui/icons-material/Login";
+import LogoutIcon from "@mui/icons-material/Logout";
+import useLogout from "../hooks/useLogout";
 
 const NavBar = () => {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const navigate = useNavigate();
   const currentUser = useRecoilValue(currentUserState);
+  const isAuthenticated = useRecoilValue(isAuthenticatedState);
   console.log(currentUser);
+  const logout = useLogout();
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -149,30 +153,42 @@ const NavBar = () => {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              <MenuItem
-                key="basket"
-                onClick={() => {
-                  handleCloseUserMenu();
-                  navigate("basket");
-                }}
-              >
-                <ShoppingCartIcon />
-                <Typography sx={{ pl: 1 }} textAlign="center">
-                  Корзина
-                </Typography>
-              </MenuItem>
-              <MenuItem
-                key="signin"
-                onClick={() => {
-                  handleCloseUserMenu();
-                  navigate("signin");
-                }}
-              >
-                <LoginIcon />
-                <Typography sx={{ pl: 1 }} textAlign="center">
-                  Войти
-                </Typography>
-              </MenuItem>
+              {!currentUser?.isAdmin && isAuthenticated && (
+                <MenuItem
+                  key="basket"
+                  onClick={() => {
+                    handleCloseUserMenu();
+                    navigate("basket");
+                  }}
+                >
+                  <ShoppingCartIcon />
+                  <Typography sx={{ pl: 1 }} textAlign="center">
+                    Корзина
+                  </Typography>
+                </MenuItem>
+              )}
+
+              {isAuthenticated ? (
+                <MenuItem key="signout" onClick={logout}>
+                  <LogoutIcon />
+                  <Typography sx={{ pl: 1 }} textAlign="center">
+                    Выйти
+                  </Typography>
+                </MenuItem>
+              ) : (
+                <MenuItem
+                  key="signin"
+                  onClick={() => {
+                    handleCloseUserMenu();
+                    navigate("signin");
+                  }}
+                >
+                  <LoginIcon />
+                  <Typography sx={{ pl: 1 }} textAlign="center">
+                    Войти
+                  </Typography>
+                </MenuItem>
+              )}
             </Menu>
           </Box>
         </Toolbar>

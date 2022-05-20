@@ -179,7 +179,7 @@ const ProductPage = () => {
             onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
             rowsPerPageOptions={[5, 10, 20]}
             pagination
-            rowHeight={100}
+            rowHeight={90}
             autoHeight
             disableSelectionOnClick
             rows={records}

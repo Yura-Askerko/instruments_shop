@@ -15,10 +15,10 @@ const checkAuth = require("../middleware/authMiddleware");
 
 router.use("/admin/user", checkRole("admin"), userAdminRouter);
 router.use("/role", checkRole("admin"), roleRouter);
-router.use("/category", checkRole("admin", "manager"), categoryRouter);
+router.use("/category", categoryRouter);
 router.use("/type", checkRole("admin", "manager"), typeRouter);
 router.use("/order", checkAuth, orderRouter);
-router.use("/product", checkAuth, productRouter);
+router.use("/product", productRouter);
 router.use("/delivery", checkAuth, deliveryRouter);
 router.use("/basket", checkRole("user"), checkAuth, basketRouter);
 router.use("/auth", authRouter);

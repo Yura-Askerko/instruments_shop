@@ -1,20 +1,30 @@
 import {
   Box,
   Button,
+  FormControl,
   Grid,
+  InputLabel,
+  Link,
+  MenuItem,
   Paper,
+  Select,
   styled,
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Page from "../components/common/Page";
 import productsResource from "../helpers/api/products";
 import categoriesResource from "../helpers/api/categories";
+import basketsResource from "../helpers/api/baskets";
 import IconButton from "@mui/material/IconButton";
 import InputAdornment from "@mui/material/InputAdornment";
 import SearchIcon from "@mui/icons-material/Search";
 import CloseIcon from "@mui/icons-material/Close";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { currentUserState, isAuthenticatedState } from "../atoms/auth";
+import { useNavigate } from "react-router-dom";
+import { currentUserBasketState } from "../atoms/userBasket";
 
 const Item = styled(Paper)(({ theme }) => ({
   elevation: 3,
@@ -26,56 +36,94 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
+const sortingStates = [
+  { id: 1, name: "По названию А-я" },
+  { id: 2, name: "По названию Я-а" },
+  { id: 3, name: "По возрастанию цены" },
+  { id: 4, name: "По убыванию цены" },
+];
+
 export default function CatalogPage() {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [inputText, setInputText] = useState("");
+  const currentUser = useRecoilValue(currentUserState);
+  const currentUserBasket = useRecoilValue(currentUserBasketState);
+  const setCurrentUserBasket = useSetRecoilState(currentUserBasketState);
+  const isAuthenticated = useRecoilValue(isAuthenticatedState);
+  const [selectedSort, setSelectedSort] = useState(1);
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const res = await productsResource.getAll();
-      setProducts(res);
-    };
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const res = await categoriesResource.getAll();
-      setCategories(res);
-    };
-    fetchData();
+  useEffect(async () => {
+    const [products, categories] = await Promise.all([
+      productsResource.getAll(),
+      categoriesResource.getAll(),
+    ]);
+    sortByAscendingName(products);
+    setCategories(categories);
   }, []);
 
   const searchProducts = async (name) => {
     const res = await productsResource.getAll();
-    setProducts(
+    sortByAscendingName(
       res.filter((p) => p.name.toLowerCase().includes(name.toLowerCase()))
     );
   };
 
   const filterProducts = async (cat) => {
     const res = await productsResource.getAll();
-    setProducts(res.filter((p) => p.category.id === cat.id));
+    sortByAscendingName(res.filter((p) => p.category.id === cat.id));
   };
 
-  const clearInput = async () => {
+  const clearInput = useCallback(async () => {
     setInputText("");
     const res = await productsResource.getAll();
-    setProducts(res);
-  };
+    sortByAscendingName(res);
+  }, []);
 
   const clearFilter = async () => {
     const res = await productsResource.getAll();
-    setProducts(res);
+    sortByAscendingName(res);
   };
+
+  const sortByAscendingName = async (products) => {
+    setProducts(products.sort((a, b) => a.name.localeCompare(b.name)));
+  };
+
+  const handleSort = (e) => {
+    const value = e.target.value;
+    setSelectedSort(value);
+    if (value === 3) {
+      const res = products.sort((a, b) => a.price - b.price);
+      setProducts(res);
+    }
+    if (value === 4) {
+      const res = products.sort((a, b) => b.price - a.price);
+      setProducts(res);
+    }
+    if (value === 1) {
+      const res = products.sort((a, b) => a.name.localeCompare(b.name));
+      setProducts(res);
+    }
+    if (value === 2) {
+      const res = products.sort((a, b) => b.name.localeCompare(a.name));
+      setProducts(res);
+    }
+  };
+
+  const addToBasket = useCallback(async (productId) => {
+    const res = await basketsResource.addToBasket({ productId, count: 1 });
+    const basket = await basketsResource.getUserBasket();
+    setCurrentUserBasket(basket);
+    console.log(res);
+  }, []);
 
   return (
     <Page title="Каталог">
       <Box p={3}>
         <Box
-          mb={3}
           sx={{
+            mb: 3,
             display: "flex",
             flexDirection: "row",
             justifyContent: "space-between",
@@ -85,7 +133,7 @@ export default function CatalogPage() {
             <MenuWrapper fullHeight xs={{ height: "100%" }}>
               <MenuItemsWrapper>
                 {categories.map((cat, index) => (
-                  <MenuItem key={index}>
+                  <MenuItemBox key={index}>
                     <MenuButton
                       onClick={() => {
                         filterProducts(cat);
@@ -93,15 +141,29 @@ export default function CatalogPage() {
                     >
                       {cat.name}
                     </MenuButton>
-                  </MenuItem>
+                  </MenuItemBox>
                 ))}
-                <MenuItem key="discard">
+                <MenuItemBox key="discard">
                   <MenuButton onClick={clearFilter}>Все</MenuButton>
-                </MenuItem>
+                </MenuItemBox>
               </MenuItemsWrapper>
             </MenuWrapper>
           </Box>
           <Box style={{ justifyContent: "right" }}>
+            <FormControl sx={{ mr: 1, width: 220 }}>
+              <InputLabel>Сортировать</InputLabel>
+              <Select
+                value={selectedSort}
+                onChange={handleSort}
+                label="Сортировать"
+              >
+                {sortingStates.map((state) => (
+                  <MenuItem key={state.id} value={state.id}>
+                    {state.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
             <TextField
               label="Поиск по названию"
               value={inputText}
@@ -137,30 +199,38 @@ export default function CatalogPage() {
                         height: "100%",
                       }}
                     >
-                      <Box>
-                        <Box
-                          component="img"
-                          sx={{
-                            height: 200,
+                      <ProductLink href={`/product/${product.id}`}>
+                        <Box>
+                          <Box
+                            component="img"
+                            sx={{
+                              height: 200,
+                            }}
+                            src={`http://localhost:5000/${product.photo}`}
+                          />
+                          <Typography variant="h6">{product.name}</Typography>
+                          <Typography variant="subtitle1">
+                            {product.price} руб.
+                          </Typography>
+                        </Box>
+                      </ProductLink>
+                      {isAuthenticated && !currentUser.isAdmin && (
+                        <Button
+                          variant="outlined"
+                          color="success"
+                          disabled={currentUserBasket.some(
+                            (basketItem) => basketItem.productId === product.id
+                          )}
+                          style={{
+                            textTransform: "none",
+                            fonUpperCase: "none",
+                            marginTop: "1rem",
                           }}
-                          src={`http://localhost:5000/${product.photo}`}
-                        />
-                        <Typography variant="h6">{product.name}</Typography>
-                        <Typography variant="subtitle1">
-                          {product.price} руб.
-                        </Typography>
-                      </Box>
-                      <Button
-                        variant="outlined"
-                        color="success"
-                        style={{
-                          textTransform: "none",
-                          fonUpperCase: "none",
-                          marginTop: "1rem",
-                        }}
-                      >
-                        Добавить в корзину
-                      </Button>
+                          onClick={() => addToBasket(product.id)}
+                        >
+                          Добавить в корзину
+                        </Button>
+                      )}
                     </Box>
                   </Item>
                 </Grid>
@@ -172,6 +242,11 @@ export default function CatalogPage() {
     </Page>
   );
 }
+
+const ProductLink = styled(Link)`
+  text-decoration: none;
+  color: inherit;
+`;
 
 const MenuButton = styled(Button)`
   color: #000;
@@ -192,7 +267,7 @@ const MenuWrapper = styled(Box)`
   height: 60px;
 `;
 
-const MenuItem = styled(Box)`
+const MenuItemBox = styled(Box)`
   padding: 4px 8px;
   display: flex;
   justify-content: center;

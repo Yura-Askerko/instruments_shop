@@ -84,12 +84,23 @@ export const getAll = async () => {
   }
 };
 
+export const getById = async (id) => {
+  try {
+    const res = await FetchAPI.get(`/product/${id}`);
+    return res.data;
+  } catch (e) {
+    console.error(e);
+    return false;
+  }
+};
+
 const productsResource = {
   getAll,
   create,
   deleteById,
   update,
   getPhoto,
+  getById,
 };
 
 export default productsResource;

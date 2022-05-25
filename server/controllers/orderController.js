@@ -21,19 +21,18 @@ class OrderController {
     const potential = await Order.findOne({
       where: { basketId: userBasket.id },
     });
+
     if (potential) {
       return next(ApiError.badRequest("Order with this basket already exists"));
     }
 
-    const basket = await BasketProduct.findAll(
-      {
-        include: {
-          model: Product,
-        },
-      },
-      { where: { id: userBasket.id } }
-    );
+    const basket = await BasketProduct.findAll({
+      include: [{ model: Product }, { model: Basket }],
+      where: { basketId: userBasket.id },
+    });
+
     const cost = basket.reduce((acc, item) => {
+      console.log(item);
       return acc + item.count * item.product.price;
     }, 0);
 

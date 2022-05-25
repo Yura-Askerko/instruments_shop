@@ -85,13 +85,22 @@ const NavBar = () => {
               }}
             >
               <MenuItem
+                key="main"
+                onClick={() => {
+                  handleCloseNavMenu();
+                  navigate("/");
+                }}
+              >
+                <Typography textAlign="center">Главная</Typography>
+              </MenuItem>
+              <MenuItem
                 key="catalog"
                 onClick={() => {
                   handleCloseNavMenu();
                   navigate("/");
                 }}
               >
-                <Typography textAlign="center">КАТАЛОГ</Typography>
+                <Typography textAlign="center">Каталог</Typography>
               </MenuItem>
               {currentUser?.isAdmin && (
                 <MenuItem
@@ -108,14 +117,24 @@ const NavBar = () => {
           </Box>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             <Button
-              key="catalog-button"
+              key="main-button"
               onClick={() => {
                 handleCloseNavMenu();
                 navigate("/");
               }}
               sx={{ my: 2, color: "white", display: "block" }}
             >
-              КАТАЛОГ
+              Главная
+            </Button>
+            <Button
+              key="catalog-button"
+              onClick={() => {
+                handleCloseNavMenu();
+                navigate("/catalog");
+              }}
+              sx={{ my: 2, color: "white", display: "block" }}
+            >
+              Каталог
             </Button>
             {currentUser?.isAdmin && (
               <Button

@@ -24,7 +24,7 @@ class BasketController {
         basketId: userBasket.id,
         count,
       });
-      return res.json({ basket });
+      return res.json(basket);
     }
   }
 
@@ -40,7 +40,7 @@ class BasketController {
       include: [{ model: Product }, { model: Basket }],
       where: { basketId: userBasket.id },
     });
-    return res.json({ basket });
+    return res.json(basket);
   }
 
   async updateUserBasketProduct(req, res, next) {
@@ -56,7 +56,7 @@ class BasketController {
       { count },
       { where: [{ basketId: userBasket.id }, { productId }] }
     );
-    return res.json({ basket });
+    return res.json(basket);
   }
 
   async deleteFromBasket(req, res, next) {
@@ -69,7 +69,7 @@ class BasketController {
     const basket = await BasketProduct.destroy({
       where: { productId, basketId: userBasket.id },
     });
-    return res.json({ basket });
+    return res.json(basket);
   }
 }
 

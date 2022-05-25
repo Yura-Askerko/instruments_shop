@@ -14,13 +14,16 @@ import ReportsPage from "../pages/ReportsPage";
 import CatalogPage from "../pages/CatalogPage";
 import NavBar from "../pages/NavBar";
 import BasketPage from "../pages/BasketPage";
+import ProductInfoPage from "../pages/ProductInfoPage";
+import MainPage from "../pages/MainPage";
 
 const MainRouter = () => (
   <Router>
     <NavBar />
     <Box className="App">
       <Routes>
-        <Route path="/" exact element={<CatalogPage />} />
+        <Route path="/" exact element={<MainPage />} />
+        <Route path="/catalog" exact element={<CatalogPage />} />
         <Route path="/signin" exact element={<SignInPage />} />
         <Route
           path="/basket"
@@ -30,6 +33,7 @@ const MainRouter = () => (
             </ProtectedRoute>
           }
         />
+        <Route path="/product/:id" element={<ProductInfoPage />} />
         <Route
           path="/admin"
           element={

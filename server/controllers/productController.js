@@ -123,10 +123,10 @@ class ProductController {
 
   async getOne(req, res, next) {
     const { id } = req.params;
-    const product = await Product.findOne(
-      { include: [{ model: Type }, { model: Category }] },
-      { where: { id } }
-    );
+    const product = await Product.findOne({
+      include: [{ model: Type }, { model: Category }],
+      where: { id },
+    });
     if (!product) {
       return next(ApiError.badRequest("Product not found"));
     }

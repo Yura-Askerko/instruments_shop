@@ -85,8 +85,45 @@ class AuthController {
   }
 
   async check(req, res, next) {
-    const token = generateJwt(req.user.id, req.user.login, req.user.roleId);
-    return res.json({ token });
+    try {
+      const token = req.headers.authorization.split(" ")[1];
+      if (!token) {
+        return res.json(false);
+      }
+
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      if (!decoded) {
+        return res.json(false);
+      }
+
+      return res.json(true);
+    } catch (e) {
+      return res.json(false);
+    }
+  }
+
+  async currentUser(req, res, next) {
+    try {
+      const token = req.headers.authorization.split(" ")[1];
+      if (!token) {
+        return res.json(null);
+      }
+
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      if (!decoded) {
+        return res.json(null);
+      }
+      const userRole = await Role.findOne({
+        where: { id: decoded.roleId },
+      });
+      return res.json({
+        id: decoded.id,
+        login: decoded.login,
+        isAdmin: userRole.name === "admin",
+      });
+    } catch (e) {
+      return res.json(null);
+    }
   }
 }
 

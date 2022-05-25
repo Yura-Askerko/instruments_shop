@@ -2,7 +2,7 @@ import FetchAPI from "./FetchAPI";
 
 export const checkAuth = async () => {
   try {
-    const res = await FetchAPI.get(`/auth/check`);
+    const res = await FetchAPI.get(`/auth`);
     console.log(res.data);
     return res.data;
   } catch (e) {

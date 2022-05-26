@@ -8,7 +8,7 @@ const AdminPage = () => {
     <Page title="Админ панель">
       <Box
         style={{
-          paddingTop: "120px",
+          paddingTop: "60px",
           height: "100%",
           width: "100%",
           display: "flex",
@@ -16,6 +16,9 @@ const AdminPage = () => {
           justifyContent: "center",
         }}
       >
+        <Typography variant="h4" style={{ paddingBottom: "30px" }}>
+          Занесение нормативно-справочной информации
+        </Typography>
         <LinkBox>
           <LinkButton variant="outlined" href="/admin/types">
             Типы товаров

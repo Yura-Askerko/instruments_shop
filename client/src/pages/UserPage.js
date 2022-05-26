@@ -88,7 +88,7 @@ const UserPage = () => {
 
   return (
     <Page title="Пользователи">
-      <Typography variant="h6" sx={{ marginTop: 2 }}>
+      <Typography variant="h6" sx={{ paddingTop: 2 }}>
         Пользователи
       </Typography>
       <Box

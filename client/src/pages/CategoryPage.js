@@ -90,7 +90,7 @@ const CategoryPage = () => {
       <Box
         sx={{
           display: "flex",
-          margin: 3,
+          padding: 3,
           flexDirection: "column",
           justifyContent: "right",
         }}

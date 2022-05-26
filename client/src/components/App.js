@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { ThemeProvider } from "@mui/material/styles";
-import { Box, CssBaseline } from "@mui/material";
+import { Box, Container, CssBaseline } from "@mui/material";
 import { createTheme } from "@mui/material";
 import "./App.css";
 import MainRouter from "../router/MainRouter";
@@ -10,6 +10,7 @@ import { RecoilRoot, useRecoilValue, useSetRecoilState } from "recoil";
 import { currentUserState, isAuthenticatedState } from "../atoms/auth";
 import basketsResource from "../helpers/api/baskets";
 import { currentUserBasketState } from "../atoms/userBasket";
+import Footer from "./common/Footer";
 
 const theme = createTheme({
   palette: {
@@ -43,7 +44,7 @@ function App() {
       <ThemeProvider theme={theme}>
         <Box className="App">
           <CssBaseline />
-          <MainRouter />
+          <MainRouter sx={{ height: "100%", paddingBottom: "60px" }} />
         </Box>
       </ThemeProvider>
     </RecoilRoot>

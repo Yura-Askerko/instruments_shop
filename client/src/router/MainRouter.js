@@ -16,81 +16,92 @@ import NavBar from "../pages/NavBar";
 import BasketPage from "../pages/BasketPage";
 import ProductInfoPage from "../pages/ProductInfoPage";
 import MainPage from "../pages/MainPage";
+import Footer from "../components/common/Footer";
 
 const MainRouter = () => (
   <Router>
-    <NavBar />
-    <Box className="App">
-      <Routes>
-        <Route path="/" exact element={<MainPage />} />
-        <Route path="/catalog" exact element={<CatalogPage />} />
-        <Route path="/signin" exact element={<SignInPage />} />
-        <Route
-          path="/basket"
-          element={
-            <ProtectedRoute>
-              <BasketPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route path="/product/:id" element={<ProductInfoPage />} />
-        <Route
-          path="/admin"
-          element={
-            <AdminRoute>
-              <AdminPage />
-            </AdminRoute>
-          }
-        />
-        <Route
-          path="/admin/types"
-          element={
-            <AdminRoute>
-              <TypePage />
-            </AdminRoute>
-          }
-        />
-        <Route
-          path="/admin/categories"
-          element={
-            <AdminRoute>
-              <CategoryPage />
-            </AdminRoute>
-          }
-        />
-        <Route
-          path="/admin/products"
-          element={
-            <AdminRoute>
-              <ProductPage />
-            </AdminRoute>
-          }
-        />
-        <Route
-          path="/admin/orders"
-          element={
-            <AdminRoute>
-              <OrderPage />
-            </AdminRoute>
-          }
-        />
-        <Route
-          path="/admin/users"
-          element={
-            <AdminRoute>
-              <UserPage />
-            </AdminRoute>
-          }
-        />
-        <Route
-          path="/admin/reports"
-          element={
-            <AdminRoute>
-              <ReportsPage />
-            </AdminRoute>
-          }
-        />
-      </Routes>
+    <Box
+      className="App"
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        minHeight: "100vh",
+      }}
+    >
+      <NavBar />
+      <Box>
+        <Routes>
+          <Route path="/" exact element={<MainPage />} />
+          <Route path="/catalog" exact element={<CatalogPage />} />
+          <Route path="/signin" exact element={<SignInPage />} />
+          <Route
+            path="/basket"
+            element={
+              <ProtectedRoute>
+                <BasketPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="/product/:id" element={<ProductInfoPage />} />
+          <Route
+            path="/admin"
+            element={
+              <AdminRoute>
+                <AdminPage />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/admin/types"
+            element={
+              <AdminRoute>
+                <TypePage />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/admin/categories"
+            element={
+              <AdminRoute>
+                <CategoryPage />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/admin/products"
+            element={
+              <AdminRoute>
+                <ProductPage />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/admin/orders"
+            element={
+              <AdminRoute>
+                <OrderPage />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/admin/users"
+            element={
+              <AdminRoute>
+                <UserPage />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/admin/reports"
+            element={
+              <AdminRoute>
+                <ReportsPage />
+              </AdminRoute>
+            }
+          />
+        </Routes>
+      </Box>
+      <Footer />
     </Box>
   </Router>
 );

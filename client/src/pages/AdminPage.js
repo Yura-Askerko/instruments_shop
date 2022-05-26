@@ -8,7 +8,7 @@ const AdminPage = () => {
     <Page title="Админ панель">
       <Box
         style={{
-          marginTop: "120px",
+          paddingTop: "120px",
           height: "100%",
           width: "100%",
           display: "flex",

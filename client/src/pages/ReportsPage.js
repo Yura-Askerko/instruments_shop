@@ -81,8 +81,8 @@ const ReportsPage = () => {
           href="/admin"
           startIcon={<ArrowBackIcon />}
           sx={{
-            marginBottom: "1rem",
-            marginTop: "1rem",
+            paddingBottom: "1rem",
+            paddingTop: "1rem",
             fontUppercase: "none",
           }}
         >

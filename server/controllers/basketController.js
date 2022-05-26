@@ -61,7 +61,8 @@ class BasketController {
 
   async deleteFromBasket(req, res, next) {
     const { id } = req.user;
-    const { productId } = req.body;
+    const productId = req.params.productId;
+    console.log(productId);
     const userBasket = await Basket.findOne({
       where: { userId: id },
       order: [["id", "DESC"]],

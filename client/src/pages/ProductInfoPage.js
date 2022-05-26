@@ -27,7 +27,7 @@ export default function ProductInfoPage() {
   };
 
   return (
-    <Box m={3}>
+    <Box p={3}>
       {product && (
         <Box sx={{ display: "flex", flexDirection: "row" }}>
           <Box

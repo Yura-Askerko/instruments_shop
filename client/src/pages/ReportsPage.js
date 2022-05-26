@@ -73,6 +73,114 @@ const ReportsPage = () => {
       }
     }
   };
+
+  const generateReportByRevenue = async () => {
+    if (!startDate || !endDate) {
+      alert("Выберите даты");
+    } else {
+      if (startDate >= endDate) {
+        alert("Начальная дата должна быть меньше конечной");
+      } else {
+        const data = await ordersResource.getByDates(
+          new Date(startDate),
+          new Date(endDate)
+        );
+
+        if (!data) {
+          alert("Нет данных по выбранной дате");
+        } else {
+          const fileType =
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
+          const fileExtension = ".xlsx";
+          const newData = [
+            {
+              "Начальная дата": startDate,
+              "Конечная дата": endDate,
+              "Выручка за период": data.reduce((acc, item) => {
+                return (
+                  acc +
+                  item.basket.basket_products.reduce((acc, i) => {
+                    return acc + i.product.price * i.count;
+                  }, 0)
+                );
+              }, 0),
+            },
+          ];
+          const ws = XLSX.utils.json_to_sheet(newData);
+          const wb = { Sheets: { data: ws }, SheetNames: ["data"] };
+          const excelBuffer = XLSX.write(wb, {
+            bookType: "xlsx",
+            type: "array",
+          });
+          const dt = new Blob([excelBuffer], { type: fileType });
+          FileSaver.saveAs(
+            dt,
+            `Отчет_Выручка_${startDate.getDay() + 1}-${startDate.getMonth()}_${
+              endDate.getDay() + 1
+            }-${endDate.getMonth()}` + fileExtension
+          );
+        }
+      }
+    }
+  };
+
+  const generateReportByLargeOrders = async () => {
+    if (!startDate || !endDate) {
+      alert("Выберите даты");
+    } else {
+      if (startDate >= endDate) {
+        alert("Начальная дата должна быть меньше конечной");
+      } else {
+        const data = await ordersResource.getByDates(
+          new Date(startDate),
+          new Date(endDate)
+        );
+
+        if (!data) {
+          alert("Нет данных по выбранной дате");
+        } else {
+          const fileType =
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
+          const fileExtension = ".xlsx";
+
+          data.sort(function (a, b) {
+            return b.cost - a.cost;
+          });
+          const newData = data.slice(0, 3).map((item) => {
+            console.log(item);
+            return {
+              "Номер заказа": item.id,
+              "Дата заказа": item.date,
+              Пользователь: item.basket.user.fullName,
+              Телефон: item.basket.user.phone,
+              "Полная стоимость": item.cost,
+              Товары: item.basket.basket_products
+                .map((i) => {
+                  return `Название: ${i.product.name}; Количество: ${i.count}; Цена: ${i.product.price}`;
+                })
+                .join("\n"),
+            };
+          });
+          const ws = XLSX.utils.json_to_sheet(newData);
+          const wb = { Sheets: { data: ws }, SheetNames: ["data"] };
+          const excelBuffer = XLSX.write(wb, {
+            bookType: "xlsx",
+            type: "array",
+          });
+          const dt = new Blob([excelBuffer], { type: fileType });
+          FileSaver.saveAs(
+            dt,
+            `Отчет_Крупные_Заказы_${
+              startDate.getDay() + 1
+            }-${startDate.getMonth()}_${
+              endDate.getDay() + 1
+            }-${endDate.getMonth()}` + fileExtension
+          );
+        }
+      }
+    }
+  };
+
   return (
     <Page title="Отчеты">
       <MainBox>
@@ -90,7 +198,7 @@ const ReportsPage = () => {
             Назад
           </Typography>
         </Button>
-        <Typography>Отчеты по выполненным заказам</Typography>
+        <Typography>Отчеты</Typography>
         <Typography>
           Для генерации отчета необходимо выбрать даты и нажать на кнопку
           сгенерировать.
@@ -129,7 +237,21 @@ const ReportsPage = () => {
           onClick={() => generateReport()}
           variant="outlined"
         >
-          Сгенерировать
+          Сгенерировать отчет по заказам
+        </Button>
+        <Button
+          style={{ marginTop: "40px" }}
+          onClick={() => generateReportByRevenue()}
+          variant="outlined"
+        >
+          Сгенерировать отчет по выручке
+        </Button>
+        <Button
+          style={{ marginTop: "40px" }}
+          onClick={() => generateReportByLargeOrders()}
+          variant="outlined"
+        >
+          Сгенерировать отчет по самым крупным заказам
         </Button>
       </MainBox>
     </Page>

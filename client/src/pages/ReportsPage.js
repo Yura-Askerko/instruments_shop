@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Box from "@mui/material/Box";
+import { useRecoilValue } from "recoil";
 import Typography from "@mui/material/Typography";
 import styled from "@emotion/styled/macro";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
@@ -11,9 +12,11 @@ import * as XLSX from "xlsx";
 import Page from "../components/common/Page";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { blue } from "@mui/material/colors";
+import { currentUserState, isAuthenticatedState } from "../atoms/auth";
 
 const ReportsPage = () => {
   const [startDate, setStartDate] = useState(new Date());
+  const currentUser = useRecoilValue(currentUserState);
   const [endDate, setEndDate] = useState(new Date());
 
   const handleStartDateChange = (newValue) => {

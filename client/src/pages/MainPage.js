@@ -3,13 +3,22 @@ import Box from "@mui/material/Box";
 import styled from "@emotion/styled/macro";
 import Page from "../components/common/Page";
 import { Typography } from "@mui/material";
+import backgroundImage from "../assets/back.jpg";
 
 const MainPage = () => {
   return (
     <Page title="Главная">
       <MainBox>
-        <Typography variant="h4">Главная страница</Typography>
-        <Typography variant="h5">
+        <Typography
+          style={{ color: "#fff", backgroundColor: "#000" }}
+          variant="h4"
+        >
+          Главная страница
+        </Typography>
+        <Typography
+          variant="h5"
+          style={{ color: "#fff", backgroundColor: "#000" }}
+        >
           Автоматизированная система магазина "Перестройка"
         </Typography>
       </MainBox>
@@ -18,12 +27,12 @@ const MainPage = () => {
 };
 
 const MainBox = styled(Box)`
-  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  flex-grow: 1;
+  min-height: calc(100vh - 158.5px);
+  background-image: url(${backgroundImage});
 `;
 
 export default MainPage;

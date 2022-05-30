@@ -103,7 +103,7 @@ const MainRouter = () => (
           />
         </Routes>
       </Box>
-      <Footer />
+      {/* <Footer /> */}
     </Box>
   </Router>
 );

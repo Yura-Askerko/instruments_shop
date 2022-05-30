@@ -1,6 +1,7 @@
 import { Helmet, HelmetProvider } from "react-helmet-async";
 
 import Box from "@mui/material/Box";
+import Footer from "./Footer";
 const Page = ({
   breadcrumbs,
   children,
@@ -10,17 +11,18 @@ const Page = ({
   ...rest
 }) => {
   return (
-    <Box style={{ minHeight: "calc(100vh - 158.5px)" }}>
+    <Box style={{ height: "100%" }}>
       <HelmetProvider>
-        <div className={className} {...rest}>
+        <Box className={className} {...rest}>
           <Helmet>
             <title>{pageTitle || title}</title>
           </Helmet>
 
           {breadcrumbs}
-          <div>{children}</div>
-        </div>
+          <Box style={{ minHeight: "calc(100vh - 158.5px)" }}>{children}</Box>
+        </Box>
       </HelmetProvider>
+      <Footer />
     </Box>
   );
 };

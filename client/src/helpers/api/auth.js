@@ -44,10 +44,21 @@ export const logout = async () => {
   }
 };
 
+export const register = async (data) => {
+  try {
+    await FetchAPI.post(`/auth/signup`, data);
+    return true;
+  } catch (e) {
+    console.error(e);
+    return false;
+  }
+};
+
 const authResource = {
   login,
   logout,
   checkAuth,
+  register,
 };
 
 export default authResource;

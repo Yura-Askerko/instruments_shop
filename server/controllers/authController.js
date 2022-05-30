@@ -32,6 +32,13 @@ class AuthController {
       );
     }
 
+    user = await User.findOne({ where: { phone } });
+    if (user) {
+      return next(
+        ApiError.badRequest("Пользователь с таким phone уже существует")
+      );
+    }
+
     const hashPassword = await bcrypt.hash(password, 5);
     const userRole = await Role.findOne({ where: { name: "user" } });
     user = await User.create({
@@ -44,6 +51,7 @@ class AuthController {
     });
 
     await Basket.create({ userId: user.id });
+
     return res.json({ user });
   }
 

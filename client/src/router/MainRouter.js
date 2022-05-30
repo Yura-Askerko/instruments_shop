@@ -17,6 +17,7 @@ import BasketPage from "../pages/BasketPage";
 import ProductInfoPage from "../pages/ProductInfoPage";
 import MainPage from "../pages/MainPage";
 import Footer from "../components/common/Footer";
+import SignUpPage from "../pages/SignUpPage";
 
 const MainRouter = () => (
   <Router>
@@ -34,6 +35,7 @@ const MainRouter = () => (
           <Route path="/" exact element={<MainPage />} />
           <Route path="/catalog" exact element={<CatalogPage />} />
           <Route path="/signin" exact element={<SignInPage />} />
+          <Route path="/signup" exact element={<SignUpPage />} />
           <Route
             path="/basket"
             element={
